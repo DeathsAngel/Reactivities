@@ -10,6 +10,8 @@ using API.Extensions;
 using API.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Authorization;
+using Application.Interfaces;
+using Infrastructure.Security;
 
 namespace API
 {
@@ -32,6 +34,8 @@ namespace API
                 config.RegisterValidatorsFromAssemblyContaining<Create>();
                 config.RegisterValidatorsFromAssemblyContaining<Edit>();
             });
+
+            services.AddScoped<IUserAccessor, UserAccessor>();
 
             services.AddSwaggerGen(c =>
             {
