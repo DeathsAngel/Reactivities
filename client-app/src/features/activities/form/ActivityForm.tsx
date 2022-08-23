@@ -12,7 +12,7 @@ import MyTextArea from "./MyTextArea";
 import MySelectInput from "./MySelectInput";
 import { categoryOptions } from "../../../app/common/options/CategoryOptions";
 import MyDateInput from "./MyDateInput";
-import { Activity, ActivityFormValues } from "../../../app/models/activity";
+import { ActivityFormValues } from "../../../app/models/activity";
 
 export default observer(function ActivityForm() {
   const history = useHistory();
