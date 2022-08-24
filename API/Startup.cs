@@ -14,6 +14,7 @@ using Application.Interfaces;
 using Infrastructure.Security;
 using Infrastructure.Photos;
 using Application.Photos;
+using API.SignalR;
 
 namespace API
 {
@@ -63,6 +64,8 @@ namespace API
             services.AddAutoMapper(typeof(MappingProfiles).Assembly);
 
             services.AddIdentityServices(_config);
+
+            services.AddSignalR();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -81,7 +84,7 @@ namespace API
             app.UseRouting();
 
             app.UseCors(policy =>{
-                        policy.AllowAnyMethod().AllowAnyHeader().WithOrigins("http://localhost:3000");
+                        policy.AllowAnyMethod().AllowAnyHeader().AllowCredentials().WithOrigins("http://localhost:3000");
                     });
 
             app.UseAuthentication();
@@ -91,6 +94,7 @@ namespace API
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHub<ChatHub>("/chat");
             });
         }
     }
