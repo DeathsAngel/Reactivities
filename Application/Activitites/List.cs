@@ -1,10 +1,10 @@
 using MediatR;
-using Domain;
 using Persistance;
 using Microsoft.EntityFrameworkCore;
 using Application.core;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using Application.Interfaces;
 
 namespace Application.Activitites
 {
@@ -15,17 +15,20 @@ namespace Application.Activitites
         public class Handler : IRequestHandler<Query, Result<List<ActivityDto>>>
         {
             private readonly DataContext _context;
-        private readonly IMapper _mapper;
+            private readonly IMapper _mapper;
+            private readonly IUserAccessor _userAccessor;
 
-            public Handler(DataContext context, IMapper mapper)
+            public Handler(DataContext context, IMapper mapper, IUserAccessor userAccessor)
             {
-            _mapper = mapper;
+                _userAccessor = userAccessor;
+                _mapper = mapper;
                 _context = context;
             }
 
             public async Task<Result<List<ActivityDto>>> Handle(Query request, CancellationToken cancellationToken)
             {
-                return Result<List<ActivityDto>>.Success(await _context.Activities.ProjectTo<ActivityDto>(_mapper.ConfigurationProvider).ToListAsync());
+                return Result<List<ActivityDto>>.Success(await _context.Activities.ProjectTo<ActivityDto>(_mapper.ConfigurationProvider, 
+                    new {currentUsername = _userAccessor.GetUsername()}).ToListAsync());
             }
         }
     }
